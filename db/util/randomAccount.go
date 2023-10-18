@@ -1,6 +1,7 @@
 package util
 
 import (
+	"database/sql"
 	"math/rand"
 	"strings"
 	"time"
@@ -36,8 +37,10 @@ func RnadomOwner() string {
 	return RandomString(6)
 }
 
-func RandomMoney() int64 {
-	return RandomInt(0, 1000)
+func RandomMoney()  sql.NullInt64 {
+	return  sql.NullInt64{
+		Int64: RandomInt(0, 1000),
+	}
 }
 
 func RandomCurrency() string{
