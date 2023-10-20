@@ -2,7 +2,7 @@ package tutorial
 
 import (
 	"context"
-	"go-practice/db/util"
+	"go-practice/util"
 	"log"
 	"testing"
 
@@ -38,7 +38,10 @@ func CreateAccount() Account {
 }
 
 func TestListAccount(t *testing.T) {
-	accounts, err := testQueries.ListAccounts(context.Background())
+	accounts, err := testQueries.ListAccounts(context.Background(), ListAccountsParams{
+		Limit:  10,
+		Offset: 1 * 5,
+	})
 
 	for _, v := range accounts {
 		t.Log(v)

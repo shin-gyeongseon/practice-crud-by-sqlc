@@ -10,7 +10,9 @@ RETURNING *;
 
 -- name: ListAccounts :many
 SELECT * FROM accounts
-ORDER BY created_at;
+ORDER BY created_at
+LIMIT $1
+OFFSET $2;
 
 -- name: SelectAccount :one
 SELECT * FROM accounts
