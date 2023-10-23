@@ -24,7 +24,7 @@ func TestTransferTx(t *testing.T) {
 		txName := fmt.Sprintf("tx %d", i+1)
 		go func() {
 			ctx := context.WithValue(context.Background(), txKey, txName)
-			result, err := store.TrasnferTx(ctx, TransferTxParams{
+			result, err := store.TransferTx(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,

@@ -79,10 +79,10 @@ func (c *customError2) OtherPrint() string {
 }
 
 type Terrible int64
+
 func (t *Terrible) RoyalPrint() {
 	*t = 999
 }
-	
 
 func TestEqualError2(t *testing.T) {
 	err1 := customError2{

@@ -21,7 +21,7 @@ func (server *Server) CreateAccount(ctx *gin.Context) {
 		return
 	}
 
-	account, err := server.Queries.CreateAccount(ctx, tutorial.CreateAccountParams{
+	account, err := server.store.CreateAccount(ctx, tutorial.CreateAccountParams{
 		Owner:    req.Owner,
 		Currency: req.Currency,
 		Balance:  0,
@@ -46,7 +46,7 @@ func (server *Server) GetAccount(ctx *gin.Context) {
 		return
 	}
 
-	account, err := server.Queries.SelectAccount(ctx, req.ID) // 여기서 ctx 를 넣어줘야하는건지 context.Context 를 넣어줘야하는건지 모르겠네 ;;
+	account, err := server.store.SelectAccount(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			fmt.Printf("err address : %v , sql.ErrNoRows address : %v \n", &err, &sql.ErrNoRows)
@@ -79,7 +79,7 @@ func (server *Server) ListAccounts(ctx *gin.Context) {
 		Offset: req.PageID * req.PageSise,
 	}
 
-	listAccounts, err := server.Queries.ListAccounts(ctx, arg)
+	listAccounts, err := server.store.ListAccounts(ctx, arg)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNoContent, errorResponse(err))
