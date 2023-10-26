@@ -1,3 +1,5 @@
+DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
+
 postgres:
 	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:latest
 
@@ -7,10 +9,25 @@ test:
 winsqlc:
 	docker run --rm -v C:\shiftone-projects\go-practice\db:/src -w /src sqlc/sqlc:latest generate
 
-winmock
+migrateup:
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
+
+migrateup1:
+	migrate -path db/migration -database "$(DB_URL)" -verbose up 1
+
+migratedown:
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
+
+migratedown1:
+	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
+
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
+
+winmock:
 	mockgen -destination db\mock\store.go -source .\db\tutorial\store.go
 
 server:
 	go run main.go
 
-.PHONY:postgres test winsqlc winmock server
+.PHONY:postgres test winsqlc migrateup migrateup1 migratedown migratedown1 new_migration winmock server

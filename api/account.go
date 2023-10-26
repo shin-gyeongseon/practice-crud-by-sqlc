@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"go-practice/db/tutorial"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 type createAccountRequest struct {
@@ -27,6 +29,14 @@ func (server *Server) CreateAccount(ctx *gin.Context) {
 		Balance:  0,
 	})
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok { // error type 으로 관리하는 것처럼 확인되는데 정확하게 무슨 뜻인지 알면 더 좋을 것 같습니다. 
+			switch pqErr.Code.Name() {
+			case "foreign_key_violation", "unique_violation":
+				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+				return
+			}
+			log.Println(pqErr.Code.Name())
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}

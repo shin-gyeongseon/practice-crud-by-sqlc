@@ -18,12 +18,12 @@ type SQLStore struct {
 
 func NewStore(db *sql.DB) Store {
 	return &SQLStore{
-		db: db,
+		db:      db,
 		Queries: New(db),
 	}
 }
 
-// execTx executes a functions within a database transaction 
+// execTx executes a functions within a database transaction
 func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -44,29 +44,28 @@ func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) erro
 
 type TransferTxParams struct {
 	FromAccountID int64 `json:"from_account_id"`
-	ToAccountID int64 `json:"to_account_id"`
-	Amount int64 `json:"amount"`
+	ToAccountID   int64 `json:"to_account_id"`
+	Amount        int64 `json:"amount"`
 }
 
 type TransferTxResult struct {
-	Transfer Transfer `json:"transfer"`
-	FromAccount Account `json:"from_account"`
-	ToAccount Account `json:"to_account"`
-	FromEntry Entry `json:"from_entry"`
-	ToEntry Entry `json:"to_entry"`
+	Transfer    Transfer `json:"transfer"`
+	FromAccount Account  `json:"from_account"`
+	ToAccount   Account  `json:"to_account"`
+	FromEntry   Entry    `json:"from_entry"`
+	ToEntry     Entry    `json:"to_entry"`
 }
 
 var txKey = struct{}{}
 
 func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
-	
-	err := store.execTx(ctx, func (q *Queries) error  {
+
+	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
 		txName := ctx.Value(txKey)
 
-		fmt.Println(txName, "create transfer 1")
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: sql.NullInt64{
 				Int64: arg.FromAccountID,
@@ -79,10 +78,9 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			Amount: arg.Amount,
 		})
 		if err != nil {
-			return err 
+			return err
 		}
 
-		fmt.Println(txName, "create entry 1")
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: sql.NullInt64{
 				Int64: arg.FromAccountID,
@@ -91,10 +89,9 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			Amount: arg.Amount,
 		})
 		if err != nil {
-			return err 
+			return err
 		}
 
-		fmt.Println(txName, "create entry 2")
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: sql.NullInt64{
 				Int64: arg.ToAccountID,
@@ -103,28 +100,27 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			Amount: arg.Amount,
 		})
 
-		fmt.Println(txName, "select account for update")
-		account1 ,err := q.SelectAccountForUpdate(ctx, arg.FromAccountID)
+		account1, err := q.SelectAccountForUpdate(ctx, arg.FromAccountID)
 		if err != nil {
 			return err
 		}
-		
+
 		account2, err := q.SelectAccountForUpdate(ctx, arg.ToAccountID)
 		if err != nil {
 			return nil
 		}
-		
+
 		if arg.FromAccountID < arg.ToAccountID {
 			result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID: arg.FromAccountID,
+				ID:      arg.FromAccountID,
 				Balance: account1.Balance - arg.Amount,
 			})
 			if err != nil {
 				return err
 			}
-			
+
 			result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID: arg.ToAccountID,
+				ID:      arg.ToAccountID,
 				Balance: account2.Balance + arg.Amount,
 			})
 			if err != nil {
@@ -132,25 +128,21 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			}
 		} else {
 			result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID: arg.ToAccountID,
+				ID:      arg.ToAccountID,
 				Balance: account2.Balance + arg.Amount,
 			})
 			if err != nil {
 				return err
 			}
-			
+
 			result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
-				ID: arg.FromAccountID,
+				ID:      arg.FromAccountID,
 				Balance: account1.Balance - arg.Amount,
 			})
 			if err != nil {
 				return err
 			}
 		}
-
-
-
-
 
 		return nil
 	})

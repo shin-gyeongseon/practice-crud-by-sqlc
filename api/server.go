@@ -20,10 +20,14 @@ func NewServer(store tutorial.Store) *Server {
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
-	} // ?! 이건 parameter valid 하는 과정에서 사용할 수 있는거 아닌가 ? 
+	}
 
+	// account
 	router.POST("/accounts", server.CreateAccount)
 	router.GET("/accounts/:id", server.GetAccount)
+
+	// transfer
+	router.POST("/transfer", server.CreateTransfer)
 
 	server.router = router
 	return server

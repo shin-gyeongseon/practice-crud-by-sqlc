@@ -93,7 +93,7 @@ func TestGetAccountAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			server := NewServer(store)
-			recorder := httptest.NewRecorder() 
+			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/accounts/%d", tc.accountID)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
@@ -119,7 +119,7 @@ func requireBodyMatch(t *testing.T, body *bytes.Buffer, account tutorial.Account
 func randomAccount() tutorial.Account {
 	return tutorial.Account{
 		ID:       util.RandomInt(1, 1000),
-		Owner:    util.RnadomOwner(),
+		Owner:    util.RandomOwner(),
 		Balance:  util.RandomMoney().Int64,
 		Currency: util.RandomCurrency(),
 	}

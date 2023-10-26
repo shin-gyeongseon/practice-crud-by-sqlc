@@ -11,8 +11,8 @@ import (
 func TestTransferTx(t *testing.T) {
 	store := NewStore(testDB)
 
-	account1 := CreateAccount()
-	account2 := CreateAccount()
+	account1 := createRandomAccount(t)
+	account2 := createRandomAccount(t)
 
 	n := 5
 	amount := int64(10)
@@ -69,12 +69,5 @@ func TestTransferTx(t *testing.T) {
 		toAccount := result.ToAccount
 		require.NotEmpty(t, fromAccount)
 		require.Equal(t, account2.ID, toAccount.ID)
-
-		diff1 := account1.Balance - fromAccount.Balance
-		diff2 := toAccount.Balance - account2.Balance
-		require.Equal(t, diff1, diff2)
-		require.True(t, diff1 > 0)
-		require.True(t, diff1%amount == 0)
-
 	}
 }

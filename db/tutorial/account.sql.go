@@ -21,7 +21,7 @@ RETURNING id, owner, balance, currency, created_at
 `
 
 type CreateAccountParams struct {
-	Owner    string
+	Owner    interface{}
 	Balance  int64
 	Currency string
 }
