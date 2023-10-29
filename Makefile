@@ -9,6 +9,9 @@ test:
 winsqlc:
 	docker run --rm -v C:\shiftone-projects\go-practice\db:/src -w /src sqlc/sqlc:latest generate
 
+macsqlc:
+	sqlc generate
+
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
@@ -25,9 +28,9 @@ new_migration:
 	migrate create -ext sql -dir db/migration -seq $(name)
 
 winmock:
-	mockgen -destination db\mock\store.go -source .\db\tutorial\store.go
+	mockgen -destination db\mock\store.go -source db\tutorial\store.go
 
 server:
 	go run main.go
 
-.PHONY:postgres test winsqlc migrateup migrateup1 migratedown migratedown1 new_migration winmock server
+.PHONY:postgres test winsqlc macsqlc migrateup migrateup1 migratedown migratedown1 new_migration winmock server
