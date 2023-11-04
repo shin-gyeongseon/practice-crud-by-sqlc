@@ -7,7 +7,6 @@ package tutorial
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createEntry = `-- name: CreateEntry :one
@@ -21,7 +20,7 @@ RETURNING id, account_id, amount, created_at
 `
 
 type CreateEntryParams struct {
-	AccountID sql.NullInt64
+	AccountID int64
 	Amount    int64
 }
 

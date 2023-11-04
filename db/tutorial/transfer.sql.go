@@ -7,7 +7,6 @@ package tutorial
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createTransfer = `-- name: CreateTransfer :one
@@ -22,8 +21,8 @@ RETURNING id, from_account_id, to_account_id, amount, created_at
 `
 
 type CreateTransferParams struct {
-	FromAccountID sql.NullInt64
-	ToAccountID   sql.NullInt64
+	FromAccountID int64
+	ToAccountID   int64
 	Amount        int64
 }
 

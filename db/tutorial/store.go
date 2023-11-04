@@ -67,14 +67,8 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 		// txName := ctx.Value(txKey)
 
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
-			FromAccountID: sql.NullInt64{
-				Int64: arg.FromAccountID,
-				Valid: true,
-			},
-			ToAccountID: sql.NullInt64{
-				Int64: arg.ToAccountID,
-				Valid: true,
-			},
+			FromAccountID: arg.Amount,
+			ToAccountID: arg.ToAccountID,
 			Amount: arg.Amount,
 		})
 		if err != nil {
@@ -82,10 +76,7 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 		}
 
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
-			AccountID: sql.NullInt64{
-				Int64: arg.FromAccountID,
-				Valid: true,
-			},
+			AccountID: arg.FromAccountID,
 			Amount: arg.Amount,
 		})
 		if err != nil {
@@ -93,12 +84,12 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 		}
 
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
-			AccountID: sql.NullInt64{
-				Int64: arg.ToAccountID,
-				Valid: true,
-			},
+			AccountID: arg.ToAccountID,
 			Amount: arg.Amount,
 		})
+		if err != nil {
+			return err
+		}
 
 		account1, err := q.SelectAccountForUpdate(ctx, arg.FromAccountID)
 		if err != nil {

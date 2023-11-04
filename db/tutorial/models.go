@@ -5,39 +5,39 @@
 package tutorial
 
 import (
-	"database/sql"
+	"time"
 )
 
 type Account struct {
 	ID        int64
-	Owner     interface{}
+	Owner     string
 	Balance   int64
 	Currency  string
-	CreatedAt interface{}
+	CreatedAt time.Time
 }
 
 type Entry struct {
 	ID        int64
-	AccountID sql.NullInt64
-	// can be negative our?
+	AccountID int64
+	// can be negative or positive
 	Amount    int64
-	CreatedAt interface{}
+	CreatedAt time.Time
 }
 
 type Transfer struct {
 	ID            int64
-	FromAccountID sql.NullInt64
-	ToAccountID   sql.NullInt64
+	FromAccountID int64
+	ToAccountID   int64
 	// must be positive
 	Amount    int64
-	CreatedAt interface{}
+	CreatedAt time.Time
 }
 
 type User struct {
 	Username          string
 	HashedPassword    string
-	FullName          interface{}
+	FullName          string
 	Email             string
-	PasswordChangedAt interface{}
-	CreatedAt         interface{}
+	PasswordChangedAt time.Time
+	CreatedAt         time.Time
 }

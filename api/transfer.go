@@ -31,14 +31,8 @@ func (server *Server) CreateTransfer(ctx *gin.Context) {
 	}
 
 	account, err := server.store.CreateTransfer(ctx, tutorial.CreateTransferParams{
-		FromAccountID: sql.NullInt64{
-			Int64: req.FromAccountID,
-			Valid: true,
-		},
-		ToAccountID: sql.NullInt64{
-			Int64: req.ToAccountID,
-			Valid: true,
-		},
+		FromAccountID: req.FromAccountID,
+		ToAccountID: req.ToAccountID,
 		Amount: req.Amount,
 	})
 

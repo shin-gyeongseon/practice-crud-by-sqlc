@@ -29,6 +29,8 @@ func NewServer(store tutorial.Store) *Server {
 	// transfer
 	router.POST("/transfer", server.CreateTransfer)
 
+	// user
+	router.POST("/user", server.CreateUser)
 	server.router = router
 	return server
 }

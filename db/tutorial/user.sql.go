@@ -24,7 +24,7 @@ RETURNING username, hashed_password, full_name, email, password_changed_at, crea
 type CreateUserParams struct {
 	Username       string
 	HashedPassword string
-	FullName       interface{}
+	FullName       string
 	Email          string
 }
 
