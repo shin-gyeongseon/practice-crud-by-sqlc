@@ -1,10 +1,10 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "./queries/"
-    schema: "ddl.sql"
+    queries: "db/queries/"
+    schema: "db/migration"
     gen:
       go:
         package: "tutorial"
-        out: "tutorial"
+        out: "db/tutorial"
         emit_interface: true
