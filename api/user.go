@@ -3,12 +3,10 @@ package api
 import (
 	"go-practice/db/tutorial"
 	"go-practice/util"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lib/pq"
 )
 
 // user go 를 만드는 작업부터 해야합니다. 이거부터 다시 작업합시다.
@@ -57,17 +55,13 @@ func (server *Server) CreateUser(ctx *gin.Context) {
 		HashedPassword: hashedPassword,
 	})
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
-			case "unique_violation":
-				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-				return
-			}
-			log.Println(pqErr.Code.Name())
+		if tutorial.ErrorCode(err) == tutorial.UniqueViolation {
+			ctx.JSON(http.StatusForbidden, errorResponse(err))
 		}
+
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, newUserResponse(user))
 }
