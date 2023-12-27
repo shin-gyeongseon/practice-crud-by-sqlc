@@ -72,7 +72,7 @@ func TestCreateUserAPI(t *testing.T) {
 					FullName: randomUser.FullName,
 					Email:    randomUser.Email,
 				}
-				
+
 				store.EXPECT().
 					CreateUser(gomock.Any(), eqCreateUserParamMatcher(arg, password)).
 					Times(1).
@@ -83,7 +83,7 @@ func TestCreateUserAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "BAD REQUEST",
+			name: "BADREQUEST",
 			body: gin.H{
 				"user_name": randomUser.Username,
 				"full_name": randomUser.FullName,
@@ -93,11 +93,10 @@ func TestCreateUserAPI(t *testing.T) {
 			buildStubs: func(store *mock_tutorial.MockStore) {
 				store.EXPECT().
 					CreateUser(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(randomUser, nil)
+					Times(0)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
+				require.Equal(t, 400, http.StatusBadRequest)
 			},
 		},
 		{

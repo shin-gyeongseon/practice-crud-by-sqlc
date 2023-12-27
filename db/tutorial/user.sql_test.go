@@ -8,6 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestCreateUser(t *testing.T) {
+	CreateRandomUser(t)
+}
+
 func CreateRandomUser(t *testing.T) User {
 	hashedPassword, err := util.HashPassword(util.RandomString(6))
 	require.NoError(t, err)
@@ -33,10 +37,6 @@ func CreateRandomUser(t *testing.T) User {
 	require.NotZero(t, user.PasswordChangedAt)
 
 	return user
-}
-
-func TestCreateUser(t *testing.T) {
-	CreateRandomUser(t)
 }
 
 func TestSelectUser(t *testing.T) {

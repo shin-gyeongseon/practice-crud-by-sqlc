@@ -30,24 +30,18 @@ func (server *Server) CreateTransfer(ctx *gin.Context) {
 		return
 	}
 
-	account, err := server.store.CreateTransfer(ctx, tutorial.CreateTransferParams{
+	transferTxResult, err := server.store.TransferTx(ctx, tutorial.TransferTxParams{
 		FromAccountID: req.FromAccountID,
 		ToAccountID: req.ToAccountID,
 		Amount: req.Amount,
 	})
 
-	// WILL BE
-	// update account balance ?! 이걸 해줘야 합니다. account에 잔액이 있으니까 이걸 수정하는게 필요합니다. 
-	// 1. 과연 금액을 감소하는 로직이 따로 있으면 좋을까 ? 
-	// 2. 여기서 비즈니스를 리터럴하게 작성하는게 좋을까 ? 
-	// 금액을 관리하는 테이블이 account라고 하면 account 코드에서 함수로 제공하는게 맞습니다. 그렇게 해야 관리영역이 확실해집니다. 
-
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
+		return 
 	}
 
-	ctx.JSON(http.StatusOK, account)
+	ctx.JSON(http.StatusOK, transferTxResult)
 }
 
 func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string) bool {

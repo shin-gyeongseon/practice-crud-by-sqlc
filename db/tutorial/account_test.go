@@ -8,6 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestCreateAccount(t *testing.T) {
+	createRandomAccount(t)
+}
+
 func createRandomAccount(t *testing.T) Account {
 	user := CreateRandomUser(t)
 
@@ -34,10 +38,6 @@ func createRandomAccount(t *testing.T) Account {
 	require.NotZero(t, account.CreatedAt)
 
 	return account
-}
-
-func TestCreateAccount(t *testing.T) {
-	createRandomAccount(t)
 }
 
 func TestListAccount(t *testing.T) {

@@ -16,6 +16,7 @@ const (
 
 var testQueries *Queries
 var testDB *sql.DB
+var testSqlStore Store
 
 func TestMain(m *testing.M) {
 	var err error 
@@ -26,6 +27,8 @@ func TestMain(m *testing.M) {
 	}
 
 	testQueries = New(testDB)
+
+	testSqlStore = NewStore(testDB)
 
 	os.Exit(m.Run())
 }

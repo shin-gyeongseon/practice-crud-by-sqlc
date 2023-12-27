@@ -8,6 +8,10 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+type ServerIf interface {
+	
+}
+
 // Server servers HTTP requests for our banking service
 type Server struct {
 	store  tutorial.Store
