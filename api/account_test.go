@@ -121,6 +121,6 @@ func randomAccount() tutorial.Account {
 		ID:       util.RandomInt(1, 1000),
 		Owner:    util.RandomOwner(),
 		Balance:  util.RandomMoney().Int64,
-		Currency: util.RandomCurrency(),
+		Currency: util.USD,
 	}
 }
