@@ -145,7 +145,7 @@ func TestTransfer(t *testing.T) {
 			store := mock_tutorial.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store, TestGlobalConfig)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)

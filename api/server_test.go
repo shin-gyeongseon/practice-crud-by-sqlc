@@ -1,19 +1,27 @@
 package api
 
 import (
+	"go-practice/db/tutorial"
 	"go-practice/util"
 	"log"
+	"os"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
-var TestGlobalConfig util.Config
-
-func TestMain(m *testing.M) {
-	t, err := util.LoadConfig("../")
+func newTestServer(t *testing.T, db tutorial.Store) *Server{
+	config, err := util.LoadConfig("../")
 	if err != nil {
 		log.Fatalln(err)
-		return
+		return nil
 	}
 
-	TestGlobalConfig = t
+	server := NewServer(db, config)
+	return server
+}
+
+func TestMain(m *testing.M) {
+	gin.SetMode(gin.TestMode)
+	os.Exit(m.Run())
 }

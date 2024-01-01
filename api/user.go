@@ -72,10 +72,10 @@ type loginRequest struct {
 }
 
 type loginResponse struct {
-	ReturnUser userResponse `json:"user"`
-	AccessToken      string       `json:"token"`
-	AccessTokenExpired time.Time	`json:"access_token_expired"`
-	SessionID string `json:"session_id"`
+	ReturnUser         userResponse `json:"user"`
+	AccessToken        string       `json:"token"`
+	AccessTokenExpired time.Time    `json:"access_token_expired"`
+	SessionID          string       `json:"session_id"`
 }
 
 func (server *Server) LoginUser(ctx *gin.Context) {
@@ -97,20 +97,20 @@ func (server *Server) LoginUser(ctx *gin.Context) {
 		return
 	}
 
-	token, payload, err3 := server.maker.CreateToken(loginRequest.UserName, server.config.AccessTokenDuration)
+	token, payload, err3 := server.tokenMaker.CreateToken(loginRequest.UserName, server.config.AccessTokenDuration)
 	if err3 != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err3))
 		return
 	}
 
 	loginSession := tutorial.CreateSessionParams{
-		ID: payload.ID.String(),
-		ExpiresAt: payload.ExpiredAt,
+		ID:           payload.ID.String(),
+		ExpiresAt:    payload.ExpiredAt,
 		RefreshToken: token,
-		Username: loginRequest.UserName,
-		UserAgent: ctx.Request.UserAgent(),
-		ClientIp: ctx.ClientIP(),
-		IsBlocked: false,
+		Username:     loginRequest.UserName,
+		UserAgent:    ctx.Request.UserAgent(),
+		ClientIp:     ctx.ClientIP(),
+		IsBlocked:    false,
 	}
 	session, err4 := server.store.CreateSession(ctx, loginSession)
 	if err4 != nil {
@@ -126,9 +126,9 @@ func (server *Server) LoginUser(ctx *gin.Context) {
 			PasswordChangedAt: user.PasswordChangedAt,
 			CreatedAt:         user.CreatedAt,
 		},
-		AccessToken: token,
+		AccessToken:        token,
 		AccessTokenExpired: payload.ExpiredAt,
-		SessionID: session.ID,
+		SessionID:          session.ID,
 	}
 
 	ctx.JSON(http.StatusOK, loginResponse)

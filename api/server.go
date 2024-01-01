@@ -16,10 +16,10 @@ type ServerIf interface {
 
 // Server servers HTTP requests for our banking service
 type Server struct {
-	store  tutorial.Store
-	router *gin.Engine
-	maker  token.Maker
-	config util.Config
+	store      tutorial.Store
+	router     *gin.Engine
+	tokenMaker token.Maker
+	config     util.Config
 }
 
 func NewServer(store tutorial.Store, config util.Config) *Server {
@@ -30,9 +30,9 @@ func NewServer(store tutorial.Store, config util.Config) *Server {
 	}
 
 	server := &Server{
-		store: store,
-		maker: tokenMaker,
-		config: config,
+		store:      store,
+		tokenMaker: tokenMaker,
+		config:     config,
 	}
 	router := gin.Default()
 
@@ -40,18 +40,18 @@ func NewServer(store tutorial.Store, config util.Config) *Server {
 		v.RegisterValidation("currency", validCurrency)
 	}
 
-	// account
-	router.POST("/accounts", server.CreateAccount)
-	router.GET("/accounts/:id", server.GetAccount)
-
-	// transfer
-	router.POST("/transfer", server.CreateTransfer)
-
 	// user
 	router.POST("/user", server.CreateUser)
-
-	// login
 	router.POST("/login", server.LoginUser)
+
+	// account
+	authRoutes := router.Group("/").Use(authMiddleware(tokenMaker))
+	authRoutes.POST("/accounts", server.CreateAccount)
+	authRoutes.GET("/accounts/:id", server.GetAccount)
+
+	// transfer
+	authRoutes.POST("/transfer", server.CreateTransfer)
+
 	server.router = router
 	return server
 }
