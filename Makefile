@@ -27,10 +27,10 @@ migratedown1:
 new_migration:
 	migrate create -ext sql -dir db/migration -seq $(name)
 
-winmock:
-	mockgen -destination db\mock\store.go -source db\tutorial\store.go
-
+mock:
+	mockgen -source db/tutorial/store.go -destination db/mock/store.go
+	
 server:
 	go run main.go
 
-.PHONY:postgres test winsqlc macsqlc migrateup migrateup1 migratedown migratedown1 new_migration winmock server
+.PHONY:postgres test winsqlc macsqlc migrateup migrateup1 migrateup2 migrateup3 migratedown migratedown1 migratedown2 migratedown3 new_migration winmock server

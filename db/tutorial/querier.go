@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
 	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error)
+	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteAccount(ctx context.Context, id int64) error
@@ -22,6 +23,7 @@ type Querier interface {
 	SelectAccount(ctx context.Context, id int64) (Account, error)
 	SelectAccountForUpdate(ctx context.Context, id int64) (Account, error)
 	SelectEntry(ctx context.Context, id int64) (Entry, error)
+	SelectSession(ctx context.Context, username string) (Session, error)
 	SelectTransfer(ctx context.Context, id int64) (Transfer, error)
 	SelectUser(ctx context.Context, username string) (User, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)

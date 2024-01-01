@@ -69,6 +69,21 @@ func (mr *MockStoreMockRecorder) CreateEntry(ctx, arg any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEntry", reflect.TypeOf((*MockStore)(nil).CreateEntry), ctx, arg)
 }
 
+// CreateSession mocks base method.
+func (m *MockStore) CreateSession(ctx context.Context, arg tutorial.CreateSessionParams) (tutorial.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSession", ctx, arg)
+	ret0, _ := ret[0].(tutorial.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateSession indicates an expected call of CreateSession.
+func (mr *MockStoreMockRecorder) CreateSession(ctx, arg any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSession", reflect.TypeOf((*MockStore)(nil).CreateSession), ctx, arg)
+}
+
 // CreateTransfer mocks base method.
 func (m *MockStore) CreateTransfer(ctx context.Context, arg tutorial.CreateTransferParams) (tutorial.Transfer, error) {
 	m.ctrl.T.Helper()
@@ -229,6 +244,21 @@ func (m *MockStore) SelectEntry(ctx context.Context, id int64) (tutorial.Entry, 
 func (mr *MockStoreMockRecorder) SelectEntry(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectEntry", reflect.TypeOf((*MockStore)(nil).SelectEntry), ctx, id)
+}
+
+// SelectSession mocks base method.
+func (m *MockStore) SelectSession(ctx context.Context, username string) (tutorial.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SelectSession", ctx, username)
+	ret0, _ := ret[0].(tutorial.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SelectSession indicates an expected call of SelectSession.
+func (mr *MockStoreMockRecorder) SelectSession(ctx, username any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectSession", reflect.TypeOf((*MockStore)(nil).SelectSession), ctx, username)
 }
 
 // SelectTransfer mocks base method.

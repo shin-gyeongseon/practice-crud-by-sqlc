@@ -24,14 +24,19 @@ func NewJWTMaker(secretKey string) (Maker, error) {
 	return &JWTMaker{secretKey}, nil
 }
 
-func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (string, error) {
+func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (string, Payload, error) {
 	payload, err := NewPayload(username, duration)
 	if err != nil {
-		return "", err
+		return "", Payload{}, err
 	}
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload) // Q. 이게 어떻게 토큰을 생성한다는걸 알아야할까 ? 
-	return jwtToken.SignedString([]byte(maker.scretKey))
+	token, err2 := jwtToken.SignedString([]byte(maker.scretKey))
+	if err2 != nil {
+		return "", Payload{}, err2
+	}
+
+	return token, *payload, nil
 }
 
 func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {

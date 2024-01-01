@@ -24,6 +24,17 @@ type Entry struct {
 	CreatedAt time.Time
 }
 
+type Session struct {
+	ID           string
+	Username     string
+	RefreshToken string
+	UserAgent    string
+	ClientIp     string
+	IsBlocked    bool
+	ExpiresAt    time.Time
+	CreatedAt    time.Time
+}
+
 type Transfer struct {
 	ID            int64
 	FromAccountID int64

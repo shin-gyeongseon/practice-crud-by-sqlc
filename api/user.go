@@ -65,3 +65,81 @@ func (server *Server) CreateUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, newUserResponse(user))
 }
+
+type loginRequest struct {
+	UserName string `json:"user_name" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type loginResponse struct {
+	ReturnUser userResponse `json:"user"`
+	AccessToken      string       `json:"token"`
+	AccessTokenExpired time.Time	`json:"access_token_expired"`
+	SessionID string `json:"session_id"`
+}
+
+func (server *Server) LoginUser(ctx *gin.Context) {
+	var loginRequest loginRequest
+	if err := ctx.BindJSON(&loginRequest); err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	user, err := server.store.SelectUser(ctx, loginRequest.UserName)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+		return
+	}
+
+	err2 := util.CheckPassword(loginRequest.Password, user.HashedPassword)
+	if err2 != nil {
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err2))
+		return
+	}
+
+	token, payload, err3 := server.maker.CreateToken(loginRequest.UserName, server.config.AccessTokenDuration)
+	if err3 != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err3))
+		return
+	}
+
+	loginSession := tutorial.CreateSessionParams{
+		ID: payload.ID.String(),
+		ExpiresAt: payload.ExpiredAt,
+		RefreshToken: token,
+		Username: loginRequest.UserName,
+		UserAgent: ctx.Request.UserAgent(),
+		ClientIp: ctx.ClientIP(),
+		IsBlocked: false,
+	}
+	session, err4 := server.store.CreateSession(ctx, loginSession)
+	if err4 != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err4))
+		return
+	}
+
+	loginResponse := loginResponse{
+		ReturnUser: userResponse{
+			Username:          user.Username,
+			FullName:          user.FullName,
+			Email:             user.Email,
+			PasswordChangedAt: user.PasswordChangedAt,
+			CreatedAt:         user.CreatedAt,
+		},
+		AccessToken: token,
+		AccessTokenExpired: payload.ExpiredAt,
+		SessionID: session.ID,
+	}
+
+	ctx.JSON(http.StatusOK, loginResponse)
+}
+
+func (server *Server) ValidUser(ctx *gin.Context, userName string) bool {
+	_, err := server.store.SelectUser(ctx, userName)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+		return true
+	}
+
+	return false
+}
