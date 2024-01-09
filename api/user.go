@@ -18,7 +18,7 @@ type createUserRequest struct {
 }
 
 type userResponse struct {
-	Username          string    `json:"username"`
+	UserName          string    `json:"username"`
 	FullName          string    `json:"full_name"`
 	Email             string    `json:"email" binding:"required,email"`
 	PasswordChangedAt time.Time `json:"password_changed_at"`
@@ -27,7 +27,7 @@ type userResponse struct {
 
 func newUserResponse(user tutorial.User) userResponse {
 	return userResponse{
-		Username:          user.Username,
+		UserName:          user.Username,
 		FullName:          user.FullName,
 		Email:             user.Email,
 		CreatedAt:         user.CreatedAt,
@@ -120,7 +120,7 @@ func (server *Server) LoginUser(ctx *gin.Context) {
 
 	loginResponse := loginResponse{
 		ReturnUser: userResponse{
-			Username:          user.Username,
+			UserName:          user.Username,
 			FullName:          user.FullName,
 			Email:             user.Email,
 			PasswordChangedAt: user.PasswordChangedAt,

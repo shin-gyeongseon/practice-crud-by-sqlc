@@ -13,6 +13,7 @@ type Config struct {
 	DBDriver            string        `mapstructure:"DB_DRIVER"`
 	DBSource            string        `mapstructure:"DB_SOURCE"`
 	ServerAddress       string        `mapstructure:"SERVER_ADDRESS"`
+	GrpcADDRESS         string        `mapstructure:"GRPC_ADDRESS"`
 	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	TokenSymmenticKey   string        `mapstructure:"TOKEN_SYMMENTIC_KEY"`
 }
