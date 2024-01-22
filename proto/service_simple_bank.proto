@@ -9,5 +9,5 @@ option go_package = "go-practice/pb";
 
 service SimpleBank {
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse){}
-    rpc LoginUserUser (LoginUserRequest) returns (LoginUserResponse){}
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse){}
 }

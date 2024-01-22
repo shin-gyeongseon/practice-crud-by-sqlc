@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SimpleBankClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
-	LoginUserUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 }
 
 type simpleBankClient struct {
@@ -43,9 +43,9 @@ func (c *simpleBankClient) CreateUser(ctx context.Context, in *CreateUserRequest
 	return out, nil
 }
 
-func (c *simpleBankClient) LoginUserUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
+func (c *simpleBankClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
 	out := new(LoginUserResponse)
-	err := c.cc.Invoke(ctx, "/proto.SimpleBank/LoginUserUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.SimpleBank/LoginUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *simpleBankClient) LoginUserUser(ctx context.Context, in *LoginUserReque
 // for forward compatibility
 type SimpleBankServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	LoginUserUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	mustEmbedUnimplementedSimpleBankServer()
 }
 
@@ -68,8 +68,8 @@ type UnimplementedSimpleBankServer struct {
 func (UnimplementedSimpleBankServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedSimpleBankServer) LoginUserUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoginUserUser not implemented")
+func (UnimplementedSimpleBankServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
 }
 func (UnimplementedSimpleBankServer) mustEmbedUnimplementedSimpleBankServer() {}
 
@@ -102,20 +102,20 @@ func _SimpleBank_CreateUser_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SimpleBank_LoginUserUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SimpleBank_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SimpleBankServer).LoginUserUser(ctx, in)
+		return srv.(SimpleBankServer).LoginUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.SimpleBank/LoginUserUser",
+		FullMethod: "/proto.SimpleBank/LoginUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SimpleBankServer).LoginUserUser(ctx, req.(*LoginUserRequest))
+		return srv.(SimpleBankServer).LoginUser(ctx, req.(*LoginUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,8 +132,8 @@ var SimpleBank_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SimpleBank_CreateUser_Handler,
 		},
 		{
-			MethodName: "LoginUserUser",
-			Handler:    _SimpleBank_LoginUserUser_Handler,
+			MethodName: "LoginUser",
+			Handler:    _SimpleBank_LoginUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
